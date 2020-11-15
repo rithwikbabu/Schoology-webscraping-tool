@@ -1,0 +1,95 @@
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import time
+from datetime import date
+
+#
+class Credentials:
+    def __init__(self, username, password):
+        self.username = username
+        self.password = password
+
+def dateswitch(argument):
+    switcher = {
+        1: "Jan",
+        2: "Feb",
+        3: "Mar",
+        4: "Apr",
+        5: "May",
+        6: "Jun",
+        7: "Jul",
+        8: "Aug",
+        9: "Sep",
+        10: "Oct",
+        11: "Nov",
+        12: "Dec"
+    }
+    return switcher.get(argument, "error")
+#
+
+me = Credentials('rbabu0', 'Rb719192833')
+
+driver = webdriver.Chrome('E:\Python\Selenium\chromedriver')
+driver.get('https://learn.sowashco.org/home/notifications?from_popup&')
+
+#login
+username = driver.find_elements_by_xpath('/html/body/div[2]/div/div[2]/div[1]/form/div[1]/input')[0]
+password = driver.find_elements_by_xpath('/html/body/div[2]/div/div[2]/div[1]/form/div[2]/input')[0]
+signin = driver.find_elements_by_xpath('/html/body/div[2]/div/div[2]/div[1]/form/button')[0]
+
+username.send_keys(me.username)
+password.send_keys(me.password)
+time.sleep(1)
+signin.click()
+time.sleep(5)
+
+#opening notifications
+notif = driver.find_elements_by_xpath('/html/body/div[1]/div[3]/div[1]/div[2]/div/div/div[2]/div/div/div/div/div[1]/a')[0]
+notifgrades = driver.find_elements_by_xpath('/html/body/ul/li[5]')[0]
+
+notif.click()
+time.sleep(1)
+notifgrades.click()
+time.sleep(1)
+
+#getting info
+updates = [el.text for el in driver.find_elements_by_xpath('//*[@id="main-inner"]/div[2]/ul')]
+updates = updates[0].split("\n")
+updatelist = []
+for info in updates[1::2]:
+    updatelist.append(info)
+
+#recent updates  
+t = time.localtime()
+current_time = time.strftime("%H:%M:%S", t)
+print(current_time)
+
+today = date.today()
+updatemonth = dateswitch(int(str(today).split('-')[1]))
+
+monthupdatelist = []
+for info in updatelist:
+    infomonth = info.split(' ')[-5]
+
+    if infomonth == updatemonth:
+        monthupdatelist.append(info)
+
+timehour = current_time.split(':')[0]
+timemin = current_time.split(':')[1]
+
+hourupdatelist = []
+for info in monthupdatelist:
+    infoampm = info.split(' ')[-1]
+    infodate = info.split(' ')[-2]
+    infohour = infodate.split(':')[0]
+    infomin = infodate.split(':')[1]
+
+    if infoampm == 'pm':
+        infohour = str(int(infohour) + 12)
+    
+    if infohour == timehour:
+        hourupdatelist.append(info)
+
+print(hourupdatelist)
+time.sleep(25)
+driver.quit()
