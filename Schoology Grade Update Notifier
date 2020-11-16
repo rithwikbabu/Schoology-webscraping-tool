@@ -90,6 +90,11 @@ for info in monthupdatelist:
     if infohour == timehour:
         hourupdatelist.append(info)
 
-print(hourupdatelist)
+newupdate = []
+for info in hourupdatelist:
+    infomin = infodate.split(':')[1]
+    if infomin == timemin:
+        newupdate.append(info)
+
 time.sleep(25)
 driver.quit()
