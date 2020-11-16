@@ -59,7 +59,7 @@ updatelist = []
 for info in updates[1::2]:
     updatelist.append(info)
 
-#recent updates  
+#taking all recent updates
 t = time.localtime()
 current_time = time.strftime("%H:%M:%S", t)
 print(current_time)
@@ -67,6 +67,7 @@ print(current_time)
 today = date.today()
 updatemonth = dateswitch(int(str(today).split('-')[1]))
 
+#taking updates from the current month
 monthupdatelist = []
 for info in updatelist:
     infomonth = info.split(' ')[-5]
@@ -77,6 +78,7 @@ for info in updatelist:
 timehour = current_time.split(':')[0]
 timemin = current_time.split(':')[1]
 
+#taking updates from the current hour
 hourupdatelist = []
 for info in monthupdatelist:
     infoampm = info.split(' ')[-1]
@@ -90,6 +92,7 @@ for info in monthupdatelist:
     if infohour == timehour:
         hourupdatelist.append(info)
 
+#taking updates from the current minute
 newupdate = []
 for info in hourupdatelist:
     infomin = infodate.split(':')[1]
